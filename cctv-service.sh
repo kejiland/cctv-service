@@ -40,9 +40,12 @@ install_or_update() {
   echo "[2/4] 删除旧镜像..."
   docker rmi "$IMAGE" 2>/dev/null || true
 
-  echo "[3/4] 拉取最新镜像..."
+  echo "[3/4] 配置 V2Ray 代理并拉取最新镜像..."
+  export ALL_PROXY="socks5://127.0.0.1:10808"
+  export all_proxy="$ALL_PROXY"
+  export HTTP_PROXY="$ALL_PROXY"
+  export HTTPS_PROXY="$ALL_PROXY"
   docker pull "$IMAGE" || return 1
-
   echo "[4/4] 启动容器..."
   docker run -d \
     --name "$CONTAINER_NAME" \
@@ -115,3 +118,5 @@ while true; do
     *) echo "无效选项，请重新输入。"; pause ;;
   esac
 done
+
+
